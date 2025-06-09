@@ -612,7 +612,7 @@ const observer = new MutationObserver((mutations) => {
   for (let mutation of mutations) {
     if (mutation.type === "childList") {
       const text = document.body.innerText.toLowerCase();
-      if (text.includes("اscript 1")) {
+      if (text.includes("script 1")) {
         observer.disconnect(); // وقّف المراقبة بعد التشغيل
         runAzkar(); // شغّل الأذكار
         break;
