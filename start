@@ -1,0 +1,68 @@
+const azkar = [
+  "سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر", "لا حول ولا قوة إلا بالله",
+  "اللهم صل وسلم على نبينا محمد ﷺ", "أستغفر الله", "اللهم اغفر لي", "اللهم ثبت قلبي على دينك",
+  "اللهم ارزقني توبة نصوحًا", "اللهم اجعل القرآن ربيع قلبي", "اللهم إني أسألك الجنة",
+  "اللهم إني أعوذ بك من النار", "سبحان الله وبحمده سبحان الله العظيم",
+  "لا إله إلا أنت سبحانك إني كنت من الظالمين", "رب اغفر لي وتب علي إنك أنت التواب الرحيم",
+  "اللهم اجعلني لك شكارًا لك ذكارًا", "يا رب لك الحمد كما ينبغي لجلال وجهك وعظيم سلطانك",
+  "اللهم إني أسألك علماً نافعًا ورزقًا طيبًا وعملاً متقبلًا", "اللهم حبب إليّ الإيمان وزينه في قلبي",
+  "اللهم أعني على ذكرك وشكرك وحسن عبادتك"
+];
+
+// راقب التغييرات في الصفحة
+const observer = new MutationObserver((mutations) => {
+  for (let mutation of mutations) {
+    if (mutation.type === "childList") {
+      const text = document.body.innerText.toLowerCase();
+      if (text.includes("ادعيه 1")) {
+        observer.disconnect(); // وقّف المراقبة بعد التشغيل
+        runAzkar(); // شغّل الأذكار
+        break;
+      }
+    }
+  }
+});
+
+// ابدأ المراقبة
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});
+
+function runAzkar() {
+  let repeatCount = parseInt(prompt("كم عدد الأذكار اللي تحب ترسلها؟ (1 - 1000)"));
+  if (isNaN(repeatCount) || repeatCount <= 0 || repeatCount > 1000) {
+    alert("❌ دخل رقم من 1 إلى 1000  😘");
+    return;
+  }
+
+  let usedAzkar = [];
+  let i = 0;
+  let delay = 200;
+
+  let sender = setInterval(() => {
+    if (i >= repeatCount || usedAzkar.length === azkar.length) {
+      clearInterval(sender);
+      return;
+    }
+
+    let randomZikr;
+    do {
+      randomZikr = azkar[Math.floor(Math.random() * azkar.length)];
+    } while (usedAzkar.includes(randomZikr));
+
+    usedAzkar.push(randomZikr);
+
+    let input = document.querySelector("#chat__body__wall_pane__form__input");
+    let btn = document.querySelector("#chat__body__wall_pane > form > button.border-color.fa.fa-send.btn.btn-primary.chat__body__wall_pane__form__send");
+
+    if (input && btn) {
+      input.value = randomZikr;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      btn.click();
+      i++;
+    } else {
+      clearInterval(sender);
+    }
+  }, delay);
+}
